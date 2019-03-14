@@ -23,22 +23,25 @@ const kittyPrompts = {
   orangeKittyNames() {
     // Return an array of just the names of kitties who are orange e.g.
     // ['Tiger', 'Snickers']
+    let orangeKitties = kitties
+      .filter(kitty => { return kitty.color === 'orange'; })
+      .map(kitty => kitty.name);
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    const result = orangeKitties;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // In line 26 I filter the kitties dataset for kitties with the color value of orange into an array appropriate objects. I then map that array for just the name value, and assign that all to a functionally scoped variable called orange kitties. In line I definte the functionally scoped contant and assign it to the value of orangeKitties. Laslty, I return results.
   },
 
   sortByAge() {
     // Sort the kitties by their age
-
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let kittiesByAge = kitties.sort((a, b) => {return b.age - a.age;});
+    const result = kittiesByAge;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // In line 39 I am ivoking the sort method on the kitties aray with a compare fuction. The age of kittyB is being subtracted by the age of kittyA and if the result is negative the kittyA is given a lower index than kittyB, leaving the array in descending order. That sorted array is assigned to the functionally scobed variable kittiesByAge. I then decalre a functionally scoped constant names result and assign it to the value of kittiesByAge. Lastly, I return that result.
   },
 
   growUp() {
@@ -55,7 +58,9 @@ const kittyPrompts = {
     // },
     // ...etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let olderKitties = kitties.map(a => {a.age += 2; return a;});
+
+    const result = olderKitties;
     return result;
   }
 };
@@ -86,12 +91,20 @@ const clubPrompts = {
     //   Pam: ['Drama', 'Art', 'Chess'],
     //   ...etc
     // }
+    let clubMembers = {};
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    clubs.forEach((thisClub, i) => {
+      thisClub.members.forEach((member, i) => {
+        clubMembers[member] ? clubMembers[member].push(thisClub.club)
+          : clubMembers[member] = [thisClub.club];
+      });
+    });
+    
+    const result = clubMembers;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // In line 94 I map the clubs array and return the club value into a new array that I am assigning to the functionally scoped variable clubNames. I also define an empty object as clubMembers. In line 97 I iterate through the clubs array. For each club, I then itterate though each member of that club. If that member already exists (results to true) in the clubMembers object, I push the current club into that memebers value array. If it does not exists (returns false), a new key is created with that members name and the value is set to an array containing that club name. In line 107, I declare a fuctionally scoped constant named result and assign it to the value of the clubMembers object and return the result constant.
   }
 };
 
@@ -123,11 +136,18 @@ const modPrompts = {
     //   { mod: 4, studentsPerInstructor: 8 }
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let resultMods = mods.map(cohort => {
+      return {
+        mod: cohort.mod, 
+        studentsPerInstructor: cohort.students/cohort.instructors
+      };
+    });
+
+    const result = resultMods;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // On line 139, I am taking the mods array and maping over each cohort object with a new object containing the mod the the mod number as the first key value pair, followed by the key of studentsPerInstructor set to the value of that mods student count divided by the insructor count. That new array is assigned to the functionally scoped variable resultMods. The constant restult is aigned the value of resultMods and returned.
   }
 };
 
@@ -158,11 +178,17 @@ const cakePrompts = {
     //    ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let resultCakes = cakes.map(cake => { return {
+      flavor: cake.cakeFlavor,
+      inStock: cake.inStock
+    };
+    });
+
+    const result = resultCakes;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // On line 181, I take the cakes array and map over each cake object with a new object that contains two properties: that cakes flavor with the key of flavor and that cakes quantity with teh key of inStock. That new array is assigned to the variable named resultCakes. On line 187, I define a new constant name results assigned to the value of result cakes and then return the constant results.
   },
 
   onlyInStock() {
@@ -186,7 +212,9 @@ const cakePrompts = {
     // ..etc
     // ]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let inStockCakes = cakes.filter(cake => cake.inStock > 0);
+
+    const result = inStockCakes;
     return result;
 
     // Annotation:
@@ -197,7 +225,12 @@ const cakePrompts = {
     // Return the total amount of cakes in stock e.g.
     // 59
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let totalCakes = cakes.reduce((a, b) => {
+      let newTotal = a += b.inStock;
+      return newTotal;
+    }, 0);
+
+    const result = totalCakes;
     return result;
 
     // Annotation:
@@ -209,7 +242,10 @@ const cakePrompts = {
     // every cake in the dataset e.g.
     // ['dutch process cocoa', 'toasted sugar', 'smoked sea salt', 'berries', ..etc]
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let toppings = [...new Set(cakes.map(cake => cake.toppings)
+      .reduce((a, b) => a.concat(b)))];
+  
+    const result = toppings;
     return result;
 
     // Annotation:
@@ -227,11 +263,19 @@ const cakePrompts = {
     //    ...etc
     // }
 
-    const result = 'REPLACE WITH YOUR RESULT HERE';
+    let allToppings = cakes.map(cake => cake.toppings)
+      .reduce((a, b) => a.concat(b));
+    let uniqueToppins = [... new Set(allToppings)];
+    let list = {};
+    uniqueToppins.forEach(topping => {
+      list[topping] = allToppings.filter(top => top === topping).length;
+    });
+
+    const result = list;
     return result;
 
     // Annotation:
-    // Write your annotation here as a comment
+    // 
   }
 };
 
